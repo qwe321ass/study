@@ -68,7 +68,10 @@ public class st_0723_5 {
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[] { startRow, startCol });
         visited[startRow][startCol] = true;
-        int distance = 0;
+
+        // 거리는 칸마다 따로 기록해야 한다.
+        // 변수 하나로 세면 "방문한 칸의 총 개수"가 되어버려서 최단 거리와 달라진다.
+        int[][] distance = new int[rows][cols];
 
         int nowRows = 0;
         int nowCols = 0;
@@ -78,7 +81,7 @@ public class st_0723_5 {
             nowCols = current[1];
 
             if (maze[nowRows].charAt(nowCols) == 'T') {
-                return distance;
+                return distance[nowRows][nowCols];
             }
             for (int[] direction : distions) {
                 // 다음 위치 계산
@@ -91,7 +94,8 @@ public class st_0723_5 {
                         // 이동완료
                         queue.add(new int[] { newRow, newCol });
                         visited[newRow][newCol] = true;
-                        distance++;
+                        // 다음 칸의 거리 = 현재 칸의 거리 + 1
+                        distance[newRow][newCol] = distance[nowRows][nowCols] + 1;
                     }
 
                 }
