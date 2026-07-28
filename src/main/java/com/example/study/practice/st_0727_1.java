@@ -1,3 +1,5 @@
+package com.example.study.practice;
+
 import java.util.*;
 
 public class st_0727_1 {
