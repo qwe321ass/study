@@ -164,24 +164,75 @@ public class st_0728_1_step {
      * Integer.MAX_VALUE로 시작해서, 끝까지 안 바뀌었으면 0을 반환하세요.
      */
     static int minLenSubArray(int[] nums, int target) {
-        // TODO: 구현하세요
-        return 0;
+        int sum = 0;
+        int left = 0;
+        int best = 0;
+
+        // 시작점 for 문
+        for (int right = 0; right < nums.length; right++) {
+            sum += nums[right];
+            // 시작점 부터 왼쪽으로 하나씩 체우면서 best 결과 확인
+            while (sum >= target) {
+                // best 값 확인해서 갱신
+                best = (best == 0 || best > right - left + 1) ? right - left + 1 : best;
+                // 하나씩 줄림!!
+                sum -= nums[left];
+                left++;
+            }
+        }
+        if (best == 0) {
+            return 0;
+        }
+        return best;
     }
 
     // =========================================================
     // STEP 5. 최종 문제
     // =========================================================
     /*
-     * STEP 3과 똑같은 문제인데, STEP 4의 뼈대로 O(N)에 푸세요.
+     * [문제]
+     * 문자열 s와 문자열 t가 주어집니다.
+     * t의 모든 문자를 (중복 개수까지) 포함하는 s의 연속된 구간 중에서
+     * 길이가 가장 짧은 구간을 문자열로 반환하세요.
      *
-     * STEP 4와 딱 하나만 다릅니다:
-     * "조건 만족?" 을 sum >= target 이 아니라
-     * Map으로 판정해야 한다는 것.
+     * [입력]
+     * s : 검사할 문자열 (예: "ADOBECODEBANC")
+     * t : 포함해야 할 문자들 (예: "ABC")
      *
-     * 그 판정을 매번 covers()로 하면 다시 느려집니다.
-     * 대신 카운터 하나를 들고 다니세요:
+     * [출력]
+     * 조건을 만족하는 가장 짧은 구간. 없으면 빈 문자열 ""
      *
-     * needMap : t에 필요한 문자와 개수 (STEP 1 재사용)
+     * [예시]
+     * s = "ADOBECODEBANC", t = "ABC" -> "BANC"
+     * ("ADOBEC"도 A,B,C를 다 포함하지만 길이 6이라 더 김. "BANC"는 4)
+     * s = "aabbcc", t = "abc" -> "abbc"
+     * s = "a", t = "aa" -> "" (a가 2개 필요한데 1개뿐)
+     *
+     * [규칙]
+     * - 구간은 연속이어야 합니다. (띄어서 고를 수 없음)
+     * - 순서는 상관없습니다. t="ABC"인데 구간이 "BANC"여도 OK.
+     * - t에 같은 문자가 여러 개면 그 개수만큼 있어야 합니다. t="AAB" -> A 2개 필요.
+     * - 남는 문자는 있어도 됩니다. "BANC"에 N이 끼어 있어도 OK.
+     *
+     * [제한] ★ STEP 3과 다른 점은 이것뿐입니다
+     * - s의 길이 최대 100,000
+     * - STEP 3처럼 모든 구간을 잘라서 검사하면 구간이 약 50억 개라 시간 초과입니다.
+     * - 구간을 한 칸씩 밀면서 O(N)에 풀어야 합니다.
+     *
+     * ------------------------------------------------------------
+     * [힌트]
+     *
+     * STEP 4와 뼈대가 완전히 같습니다. 딱 한 군데만 다릅니다:
+     *
+     * STEP 4 STEP 5
+     * sum += nums[right] haveMap 에서 그 문자 개수 +1
+     * while (sum >= target) while (filledKind == requiredKind)
+     * sum -= nums[left] haveMap 에서 그 문자 개수 -1
+     *
+     * 즉 "조건 만족?" 판정만 숫자 -> Map 으로 바뀝니다.
+     * 그 판정을 매번 covers()로 하면 다시 느려지니, 카운터를 들고 다니세요:
+     *
+     * needMap : t에 필요한 문자와 개수 (countChars(t) 재사용)
      * haveMap : 지금 구간에 들어있는 문자와 개수
      * requiredKind : needMap.size() <- 채워야 하는 문자 "종류" 수
      * filledKind : 필요 개수까지 다 채운 종류 수
@@ -189,16 +240,66 @@ public class st_0728_1_step {
      * -> filledKind == requiredKind 이면 조건 만족!
      *
      * 문자가 들어올 때: haveMap 개수 +1 하고,
-     * 그 문자가 needMap에 있고 개수가 "정확히" 같아진 순간에만 filledKind++
+     * 그 문자가 needMap에 있고 개수가 need와 "정확히" 같아진 순간에만 filledKind++
      * 문자가 나갈 때: haveMap 개수 -1 하고,
      * 그 문자가 needMap에 있고 개수가 need보다 "작아졌으면" filledKind--
      *
-     * 정답 구간은 길이만 기록해두고(bestStart, bestLength)
-     * 마지막에 s.substring(bestStart, bestStart + bestLength) 로 잘라내세요.
+     * STEP 4는 길이(int)만 반환했지만 여기는 문자열을 반환해야 하므로,
+     * 길이와 함께 시작 위치도 기록해두세요. (bestStart, bestLength)
+     * 마지막에 s.substring(bestStart, bestStart + bestLength) 로 잘라냅니다.
+     * 못 찾았으면 "" 반환. (bestStart를 -1로 초기화해두면 판단하기 쉽습니다)
      */
     static String minWindowFast(String s, String t) {
-        // TODO: 구현하세요
-        return "";
+        Map<Character, Integer> haveMap = new HashMap<>();
+        Map<Character, Integer> needMap = countChars(t);
+        int requiredKind = needMap.size();
+        int filledKind = 0;
+        int startPoint = 0;
+        int bestStart = -1;
+        int bestLength = 0;
+        String result = "";
+        for (int endPoint = 0; endPoint < s.length(); endPoint++) {
+            // ── 오른쪽으로 한 칸 넓히기 ──
+            char inChar = s.charAt(endPoint);
+            if (haveMap.containsKey(inChar)) {
+                haveMap.put(inChar, haveMap.get(inChar) + 1);
+            } else {
+                haveMap.put(inChar, 1);
+            }
+            if (needMap.containsKey(inChar)) {
+                int haveCount = haveMap.get(inChar);
+                int needCount = needMap.get(inChar);
+                if (haveCount == needCount) {
+                    filledKind++;
+                }
+            }
+
+            // ── 조건을 만족하는 동안 왼쪽을 최대한 당기기 ──
+            while (filledKind == requiredKind) {
+                int nowLength = endPoint - startPoint + 1;
+                if (bestLength == 0 || bestLength > nowLength) {
+                    bestLength = nowLength;
+                    bestStart = startPoint;
+                }
+                char outChar = s.charAt(startPoint);
+                startPoint++;
+                if (haveMap.containsKey(outChar)) {
+                    haveMap.put(outChar, haveMap.get(outChar) - 1);
+                }
+                if (needMap.containsKey(outChar)) {
+                    int haveCount = haveMap.get(outChar);
+                    int needCount = needMap.get(outChar);
+                    if (haveCount < needCount) {
+                        filledKind--;
+                    }
+                }
+
+            }
+        }
+        if(bestStart<0 || bestLength<0) return "";
+
+        result = s.substring(bestStart, bestStart + bestLength);
+        return  result;
     }
 
     // =========================================================

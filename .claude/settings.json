@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(\"JAVA_HOME=$env:JAVA_HOME\"; $env:JAVA_HOME = \"$env:USERPROFILE\\\\.vscode\\\\extensions\\\\redhat.java-1.55.0-win32-x64\\\\jre\\\\21.0.11-win32-x86_64\"; mvn -q -B compile; if \\($?\\) { \"=== BUILD OK ===\"; & \"$env:JAVA_HOME\\\\bin\\\\java.exe\" -cp target\\\\classes com.example.study.practice.st_0728_2 })",
+      "PowerShell([Console]::OutputEncoding = [System.Text.Encoding]::UTF8; mvn -q -B compile; if \\($?\\) { & \"$env:USERPROFILE\\\\.jdks\\\\corretto-21.0.6\\\\bin\\\\java.exe\" -cp target\\\\classes com.example.study.practice.st_0728_1 })",
+      "PowerShell(& \"$env:USERPROFILE\\\\.jdks\\\\corretto-21.0.6\\\\bin\\\\java.exe\" \"C:\\\\Users\\\\enliple\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-enliple-Documents-study\\\\c9da0c70-2378-472a-a93c-bbe68d5b65e6\\\\scratchpad\\\\Ref2.java\")",
+      "PowerShell([Console]::OutputEncoding = [System.Text.Encoding]::UTF8; mvn -q -B compile; if \\($?\\) { & \"$env:USERPROFILE\\\\.jdks\\\\corretto-21.0.6\\\\bin\\\\java.exe\" -cp target\\\\classes com.example.study.practice.st_0728_1_step })",
+      "PowerShell([Console]::OutputEncoding = [System.Text.Encoding]::UTF8; mvn -q -B compile 2>&1 | Select-Object -First 20; if \\($?\\) { & \"$env:USERPROFILE\\\\.jdks\\\\corretto-21.0.6\\\\bin\\\\java.exe\" -cp target\\\\classes com.example.study.practice.st_0728_1_step })"
+    ]
+  }
+}
