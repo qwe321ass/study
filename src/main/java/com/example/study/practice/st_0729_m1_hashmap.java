@@ -1,7 +1,10 @@
 package com.example.study.practice;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * ============================================================
@@ -71,17 +74,28 @@ import java.util.List;
 public class st_0729_m1_hashmap {
 
     static List<List<String>> groupAnagrams(String[] strs) {
-        // TODO
-        String [] question = { "eat", "tea", "tan", "ate", "nat", "bat" };
 
-        for (int i = 0; i < question.length; i++) {
-            for (int j = 0; j < question[i].length(); j++) {
-                
-            }
+        List<List<String>> result = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+
+        for(String str : strs){
+            char[] arr = str.toCharArray();
         }
-    
 
-        return new ArrayList<>();
+        for (String str : strs) {
+            char[] arr = str.toCharArray();
+            Arrays.sort(arr);
+            String key = new String(arr);
+            if (!map.containsKey(key)) {
+                map.put(key, new ArrayList<>());
+            }
+            map.get(key).add(str);
+        }
+        for (String key : map.keySet()) {
+            result.add(map.get(key));
+        }
+
+        return result;
     }
 
     // =========================================================

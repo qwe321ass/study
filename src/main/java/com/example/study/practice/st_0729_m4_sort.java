@@ -81,10 +81,29 @@ package com.example.study.practice;
  * - 회의실 배정, 강의실 배정, 좌표 정렬하기, 구간 삽입
  */
 public class st_0729_m4_sort {
-
     static int[][] mergeIntervals(int[][] intervals) {
-        // TODO
-        return new int[0][];
+        int[][] result = new int[intervals.length][2];
+
+        for (int i = 0; i < intervals.length; i++) {
+            for (int j = 0; j < intervals.length; j++) {
+                if (intervals[i][0] < intervals[j][0]) {
+                    int[] temp = intervals[i];
+                    intervals[i] = intervals[j];
+                    intervals[j] = temp;
+                }
+            }
+        }
+        // 범위가 겹친경우 합침
+        for (int i = 0; i < intervals.length; i++) {
+            for (int j = i + 1; j < intervals.length; j++) {
+                if (intervals[i][0] <= intervals[j][1] && intervals[i][1] >= intervals[j][0]) {
+                    intervals[i][0] = Math.min(intervals[i][0], intervals[j][0]);
+                    intervals[i][1] = Math.max(intervals[i][1], intervals[j][1]);
+                }
+            }
+        }
+
+        return result;
     }
 
     // =========================================================

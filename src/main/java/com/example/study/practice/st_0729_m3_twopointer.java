@@ -87,8 +87,20 @@ package com.example.study.practice;
 public class st_0729_m3_twopointer {
 
     static int maxArea(int[] height) {
-        // TODO
-        return 0;
+
+        int left = 0;
+        int right = height.length - 1;
+        int sum =0;
+        while (left < right) {
+            int h = Math.min(height[left], height[right]);
+            int w = right - left;
+            sum = Math.max(sum, h * w);
+
+            // 낮은 쪽을 안쪽으로 한 칸 이동
+            if (height[left] < height[right]) left++;
+            else right--;
+        }
+        return sum;
     }
 
     // =========================================================

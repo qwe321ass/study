@@ -95,8 +95,19 @@ package com.example.study.practice;
 public class st_0729_m2_stack {
 
     static int[] dailyTemperatures(int[] temps) {
-        // TODO
-        return new int[temps.length];
+        int pastTemp = temps[0];
+        int[] answer = new int[temps.length];
+        for (int i = 1; i < temps.length; i++) {
+            if (pastTemp < temps[i]) {
+                answer[i] =  temps[i]- pastTemp;
+                pastTemp = temps[i];
+            } else {
+                pastTemp = temps[i];
+                answer[i] = 0;
+            }
+        }
+
+        return answer;
     }
 
     // =========================================================
